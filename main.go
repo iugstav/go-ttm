@@ -2,37 +2,31 @@ package main
 
 import (
 	"fmt"
-	"strconv"
 	"strings"
 )
 
-// reg := regexp.MustCompile(`[a-zA-Z0-9\s()+/*-]+`)
+// the unique usage of this function is to fix
+// the [..., "divided", "by", ...] to [..., "divided by", ...]
+func fixInputOperations(input *[]string) {
+	for i := 0; i < len(*input); i++ {
+		if (*input)[i] != "divided" {
+			continue
+		}
 
-/*
-var digits [20]string = [20]string{
-"zero", "one", "two", "three",
-"four", "five", "six", "seven",
-"eight", "nine", "ten", "eleven",
-"twelve", "thirteen", "fourteen", "fifteen",
-"sixteen", "seventeen", "eighteen", "nineteen",
+		(*input)[i] = "divided by"
+		*input = append((*input)[:i+1], (*input)[i+2:]...)
+	}
 }
-
-
-var composite_numbers [9]string = [9]string{
-"twenty", "thirty", "forty",
-"fifty", "sixty", "seventy",
-"eigthy", "ninety", "one hundred",
-}
-*/
 
 func main() {
-	//message := flag.String("m", "", "message to parse")
-	//flag.Parse()
+	// message := flag.String("m", "", "message to parse")
+	// flag.Parse()
 
-	// TODO: make language sanitizer
-	message := "one million twenty three"
+	message := "two million three thousand twenty three plus two times twenty nine divided by twenty four times twenty"
+	input := strings.Split(message, " ")
+	fixInputOperations(&input)
 
-	lexer := NewLexer(strings.Split(message, " "))
+	lexer := NewLexer(input)
 	tokens := lexer.Scan()
 	fmt.Println(tokens)
 
@@ -41,30 +35,4 @@ func main() {
 	result := parser.Parse()
 
 	fmt.Println(result)
-}
-
-func wordToNumber(words []string) ([]string, error) {
-	expression := []string{}
-
-	for i, w := range words {
-		num, ok := digits[w]
-		if !ok {
-			op, ok := valid_operations[w]
-			if !ok {
-				return nil, fmt.Errorf("unknown word: %s", w)
-			}
-
-			expression = append(expression, string(op))
-			continue
-		}
-
-		if len(words) > i+2 && words[i+1] == "and" {
-
-		}
-
-		expression = append(expression, strconv.Itoa(num))
-
-	}
-
-	return expression, nil
 }

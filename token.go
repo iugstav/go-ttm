@@ -9,8 +9,6 @@ const (
 	SUB
 	MUL
 	DIV
-
-	ILLEGAL
 )
 
 type Token struct {

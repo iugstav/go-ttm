@@ -54,7 +54,7 @@ func isSingleDigit(num string) bool {
 
 func isCentesimalOrAbove(num string) bool {
 	switch num {
-	case "hundred", "million", "billion", "trillion":
+	case "hundred", "thousand", "million", "billion", "trillion":
 		return true
 	default:
 		return false

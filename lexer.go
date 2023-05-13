@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"unicode"
+	"strings"
 )
 
 type Lexer struct {
@@ -32,7 +32,35 @@ func (l *Lexer) Scan() []Token {
 			panic(fmt.Sprintf("unexpected character at position %d: %s", l.position, l.peek()))
 		}
 	}
+
+	l.lex()
 	return l.tokens
+}
+
+func (l *Lexer) lex() {
+	var numbers []string
+	var newTokens []Token
+	actualPosition := 0
+
+	for actualPosition < len(l.tokens) {
+		for i := actualPosition; i < len(l.tokens); i++ {
+			if l.tokens[i]._type != INT {
+				newTokens = append(newTokens, Token{_type: INT, Value: strings.Join(numbers, " ")})
+				newTokens = append(newTokens, l.tokens[i])
+
+				numbers = []string{}
+
+				actualPosition = i + 1
+				break
+			}
+			actualPosition++
+			numbers = append(numbers, l.tokens[i].Value)
+		}
+	}
+
+	newTokens = append(newTokens, Token{_type: INT, Value: strings.Join(numbers, " ")})
+
+	l.tokens = newTokens
 }
 
 func (l *Lexer) scanNumber() {
@@ -42,12 +70,6 @@ func (l *Lexer) scanNumber() {
 }
 
 func (l *Lexer) isNumber() bool {
-	for _, l := range l.peek() {
-		if !unicode.IsLetter(l) {
-			return false
-		}
-	}
-
 	if _, ok := digits[l.peek()]; ok {
 		return true
 	}
@@ -75,16 +97,9 @@ func (l *Lexer) scanOperation() {
 	default:
 		panic("unimplemented operation")
 	}
-
 }
 
 func (l *Lexer) isOperation() bool {
-	for _, l := range l.peek() {
-		if !unicode.IsLetter(l) {
-			return false
-		}
-	}
-
 	if _, ok := valid_operations[l.peek()]; ok {
 		return true
 	}
