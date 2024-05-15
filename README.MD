@@ -2,4 +2,8 @@
 
 ## About
 
-ttm is a project for transforming a expression in full to numeric. It receives a full text representation of an mathematic expression and converts it to its numeric version. For now it only works with basic arithmetic operations (plus, minus, times and divide).
+ttm converte expressões numéricas básicas escritas por extenso para a sua forma numérica. Por exemplo:
+
+"um menos dois menos 3 mais 10"
+vira
+"1 - 2 - 3 + 10"
